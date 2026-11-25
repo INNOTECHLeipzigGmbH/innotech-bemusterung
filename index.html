@@ -4,20 +4,29 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bemusterungsliste – INNOTECH</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
+/* INNOTECH-Design (siehe ../INNOTECH-Design.md) */
 :root {
-  --surface-1:      #fcfcfb;
-  --page-plane:     #f9f9f7;
-  --text-primary:   #0b0b0b;
-  --text-secondary: #52514e;
-  --text-muted:     #898781;
-  --gridline:       #e1e0d9;
-  --border:         rgba(11,11,11,0.10);
-  --series-1:       #2a78d6;
-  --series-1-dark:  #184f95;
-  --status-good:      #0ca30c;
-  --status-warning:   #d97706;
-  --status-critical:  #d03b3b;
+  --it-anthrazit:   #2C353D;
+  --it-blau:        #0BA1E2;
+  --it-blau-dunkel: #0079A3;
+  --it-blau-hell:   #E6F5FC;
+  --surface-1:      #FFFFFF;
+  --page-plane:     #F0F2F3;
+  --text-primary:   #232728;
+  --text-secondary: #6B7680;
+  --text-muted:     #8C969E;
+  --gridline:       #E1E1E1;
+  --border:         #DADEE1;
+  --series-1:       var(--it-blau);
+  --series-1-dark:  var(--it-blau-dunkel);
+  /* Statusfarben fachlich beibehalten (Ampel laut Bürostandard) */
+  --status-good:      #2E8B4F;
+  --status-warning:   #C98A12;
+  --status-critical:  #C1443B;
   --status-fixiert:   #374151;
   --status-bauseits:  #0e7490;
 }
@@ -25,20 +34,42 @@
 html, body { margin: 0; padding: 0; }
 body {
   background: var(--page-plane); color: var(--text-primary);
-  font-family: system-ui, -apple-system, "Segoe UI", sans-serif; font-size: 14px;
+  font-family: 'Open Sans', Helvetica, Arial, sans-serif; font-size: 14px;
 }
-a { color: var(--series-1); }
+button, input, select, textarea { font-family: inherit; }
+a { color: var(--series-1-dark); }
+/* Kopfbereich: weiße Logo-Leiste, Anthrazit-Leiste, blaues Titel-Band */
+.site-head { position: sticky; top: 0; z-index: 50; box-shadow: 0 1px 0 rgba(0,0,0,.04); }
 header {
-  background: var(--surface-1); border-bottom: 1px solid var(--border);
-  padding: 14px 22px; display: flex; align-items: center; justify-content: space-between;
-  flex-wrap: wrap; gap: 10px; position: sticky; top: 0; z-index: 50;
+  background: #fff; border-bottom: 1px solid var(--border);
+  padding: 12px 22px; display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 10px;
 }
-header h1 { font-size: 17px; margin: 0; }
-.proj-label { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+.brand-logo { height: 26px; width: auto; display: block; }
+.nav-bar { background: var(--it-anthrazit); padding: 0 22px; display: flex; align-items: center; gap: 2px; }
+.nav-item { color: #fff; padding: 12px 16px; font-size: 12.5px; font-weight: 600; letter-spacing: .02em; position: relative; }
+.nav-item::after { content: ""; position: absolute; left: 16px; right: 16px; bottom: 0; height: 3px; background: var(--it-blau); }
+.title-banner { background: var(--it-blau); padding: 10px 22px; }
+.proj-label { font-size: 12.5px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: #fff; }
 .hbtn { border-radius: 6px; padding: 7px 13px; font-size: 12.5px; cursor: pointer; font-weight: 600; border: 1px solid var(--border); background: var(--surface-1); color: var(--text-secondary); font-family: inherit; text-decoration: none; display: inline-block; }
-.hbtn:hover { border-color: var(--series-1); color: var(--series-1); }
+.hbtn:hover { border-color: var(--series-1); color: var(--series-1-dark); }
 .hbtn-blue { background: var(--series-1); border-color: var(--series-1); color: #fff; }
-.hbtn-blue:hover { background: var(--series-1-dark); color: #fff; }
+.hbtn-blue:hover { background: var(--series-1-dark); border-color: var(--series-1-dark); color: #fff; }
+.hbtn-blue:disabled { opacity: .55; cursor: default; }
+.hbtn[hidden] { display: none; }
+.hbtn-ghost { background: #fff; border-color: var(--series-1); color: var(--series-1-dark); }
+.hbtn-ghost:hover { background: rgba(11,161,226,.08); }
+@media (max-width: 640px) { header { padding: 10px 14px; } .brand-logo { height: 22px; } .nav-bar, .title-banner { padding-left: 14px; padding-right: 14px; } }
+
+/* Leerer Zustand (Projekt ohne Raumtypen) */
+#app.is-empty #kpi-row, #app.is-empty #show-add-raumtyp-btn, #app.is-empty #filter-bar, #app.is-empty #filter-result { display: none !important; }
+.empty-state { background: var(--surface-1); border: 1px solid var(--border); border-top: 3px solid var(--it-blau); border-radius: 10px; padding: 40px 28px 36px; text-align: center; max-width: 640px; margin: 24px auto 0; }
+.empty-state .es-icon { width: 56px; height: 56px; border-radius: 50%; background: var(--it-blau-hell); color: var(--it-blau-dunkel); display: inline-flex; align-items: center; justify-content: center; font-size: 26px; margin-bottom: 14px; }
+.empty-state h2 { margin: 0 0 8px; font-size: 20px; font-weight: 300; letter-spacing: 1px; text-transform: uppercase; color: #222; }
+.empty-state p { margin: 0 auto 20px; max-width: 470px; color: var(--text-secondary); line-height: 1.6; font-size: 13.5px; }
+.empty-state .hbtn { padding: 9px 18px; font-size: 13px; }
+.empty-steps { display: flex; justify-content: center; gap: 8px 22px; flex-wrap: wrap; margin-top: 22px; padding-top: 16px; border-top: 1px solid var(--gridline); font-size: 11px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--text-muted); }
+.empty-steps b { color: var(--it-blau-dunkel); margin-right: 4px; }
 
 main { max-width: 1180px; margin: 0 auto; padding: 20px 20px 60px; }
 #error-banner { max-width: 760px; margin: 60px auto; background: var(--surface-1); border: 1px solid var(--status-critical); border-radius: 10px; padding: 20px 24px; color: var(--text-secondary); line-height: 1.6; }
@@ -48,7 +79,7 @@ main { max-width: 1180px; margin: 0 auto; padding: 20px 20px 60px; }
 .kpi-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; }
 .kpi-tile { background: var(--surface-1); border: 1px solid var(--border); border-radius: 10px; padding: 10px 16px; min-width: 108px; }
 .kpi-value { font-size: 21px; font-weight: 700; }
-.kpi-label { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+.kpi-label { font-size: 10.5px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--text-secondary); margin-top: 2px; }
 .kpi-tile.k-freigegeben .kpi-value { color: var(--status-good); }
 .kpi-tile.k-nicht_freigegeben .kpi-value { color: var(--status-critical); }
 .kpi-tile.k-alternative .kpi-value { color: var(--status-warning); }
@@ -151,7 +182,7 @@ main { max-width: 1180px; margin: 0 auto; padding: 20px 20px 60px; }
 .modal select, .modal .pg { font: inherit; font-size: 12.5px; padding: 4px 7px; border-radius: 6px; border: 1px solid var(--border); background: var(--page-plane); }
 .crop-wrap { position: relative; display: inline-block; cursor: crosshair; user-select: none; touch-action: none; }
 .crop-wrap canvas { display: block; max-width: 100%; }
-.crop-sel { position: absolute; border: 2px solid var(--series-1); background: rgba(42,120,214,.15); pointer-events: none; }
+.crop-sel { position: absolute; border: 2px solid var(--series-1); background: rgba(11,161,226,.15); pointer-events: none; }
 .crop-hint { font-size: 12px; color: var(--text-secondary); margin-right: auto; }
 .lightbox img { max-width: 92vw; max-height: 90vh; background: #fff; border-radius: 6px; }
 
@@ -164,10 +195,13 @@ main { max-width: 1180px; margin: 0 auto; padding: 20px 20px 60px; }
 .pf-links { font-size: 11.5px; margin-left: 8px; font-weight: 400; text-transform: none; letter-spacing: 0; }
 .pf-links a { cursor: pointer; }
 .pf-count { margin-right: auto; font-size: 12.5px; color: var(--text-secondary); }
-.pr-title { font-size: 16pt; font-weight: 700; margin: 0 0 2pt; }
-.pr-sub { font-size: 9.5pt; color: #444; margin-bottom: 10pt; }
+.pr-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16pt; padding-bottom: 6pt; margin-bottom: 10pt; border-bottom: 2pt solid #0BA1E2; }
+.pr-logo { height: 20pt; width: auto; display: block; }
+.pr-title { font-size: 15pt; font-weight: 300; letter-spacing: 1px; text-transform: uppercase; color: #222; margin: 0 0 2pt; }
+.pr-sub { font-size: 9pt; color: #444; }
+.pr-headtext { text-align: left; }
 .pr-sec { margin-bottom: 12pt; }
-.pr-sec h2 { font-size: 11.5pt; margin: 0 0 4pt; padding-bottom: 2pt; border-bottom: 1.5pt solid #222; break-after: avoid; }
+.pr-sec h2 { font-size: 11.5pt; font-weight: 700; margin: 0 0 4pt; padding-bottom: 2pt; border-bottom: 1.5pt solid #2C353D; break-after: avoid; }
 .pr-sec h2 small { font-weight: 400; color: #555; font-size: 9pt; margin-left: 6pt; }
 .pr-tbl { width: 100%; border-collapse: collapse; font-size: 9pt; }
 .pr-tbl th { text-align: left; font-size: 8pt; text-transform: uppercase; color: #555; border-bottom: 0.75pt solid #999; padding: 3pt 4pt; }
@@ -183,7 +217,7 @@ main { max-width: 1180px; margin: 0 auto; padding: 20px 20px 60px; }
 @media print {
   body.printing > *:not(#print-area) { display: none !important; }
   body.printing #print-area { display: block !important; }
-  body.printing { background: #fff; color: #000; }
+  body.printing { background: #fff; color: #000; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
 
 /* ---- Filter / Fabrikat-Ansicht / gemeinsam aendern ---- */
@@ -226,15 +260,16 @@ main { max-width: 1180px; margin: 0 auto; padding: 20px 20px 60px; }
 </head>
 <body>
 
-<header>
-  <div>
-    <h1>📋 Bemusterungsliste</h1>
-    <div class="proj-label" id="proj-label">Lade Projekt …</div>
-  </div>
-  <div class="hbtn-row">
-    <button class="hbtn" id="print-btn" type="button">🖨 Drucken …</button>
-  </div>
-</header>
+<div class="site-head">
+  <header>
+    <img src="innotech-logo.png" alt="INNOTECH Leipzig GmbH" class="brand-logo">
+    <div class="hbtn-row">
+      <button class="hbtn hbtn-ghost" id="print-btn" type="button">🖨 Drucken / PDF …</button>
+    </div>
+  </header>
+  <nav class="nav-bar"><span class="nav-item">Bemusterungsliste</span></nav>
+  <div class="title-banner"><div class="proj-label" id="proj-label">Lade Projekt …</div></div>
+</div>
 
 <div id="error-banner" hidden></div>
 
@@ -337,6 +372,7 @@ function showError(title, html) {
   const el = document.getElementById("error-banner");
   el.innerHTML = `<h2>${escHtml(title)}</h2><div>${html}</div>`;
   el.hidden = false;
+  document.getElementById("proj-label").textContent = title;
 }
 
 async function loadAll() {
@@ -833,8 +869,16 @@ function renderAll() {
   updateFilterUI();
   const list = document.getElementById("raumtypen-list");
   list.innerHTML = "";
+  document.getElementById("app").classList.toggle("is-empty", !RAUMTYPEN.length);
   if (!RAUMTYPEN.length) {
-    list.innerHTML = '<div class="empty-hint">Noch keine Raumtypen angelegt – mit „+ Raumtyp anlegen“ oben starten.</div>';
+    list.innerHTML = `<div class="empty-state">
+      <div class="es-icon" aria-hidden="true">📋</div>
+      <h2>Noch keine Bemusterung</h2>
+      <p>Für dieses Projekt sind noch keine Raumtypen angelegt. Lege zuerst einen Raumtyp an (z.&nbsp;B. „Einzelzimmer Bad EG“), ordne ihm Räume zu und erfasse dann die zu bemusternden Elemente mit Bild, Hersteller und Freigabestatus.</p>
+      <button class="hbtn hbtn-blue" id="empty-add-raumtyp-btn" type="button">+ Ersten Raumtyp anlegen</button>
+      <div class="empty-steps"><span><b>1</b>Raumtyp</span><span><b>2</b>Räume</span><span><b>3</b>Elemente</span><span><b>4</b>Freigabe &amp; Druck</span></div>
+    </div>`;
+    document.getElementById("empty-add-raumtyp-btn").addEventListener("click", () => document.getElementById("show-add-raumtyp-btn").click());
     return;
   }
   if (VIEW === "fabrikat") { renderFabrikatView(list); return; }
@@ -1281,7 +1325,7 @@ async function printList(f) {
   if (f.rm.length) bits.push("Räume: " + f.rm.join(", "));
   if (f.rt.length !== RAUMTYPEN.length) bits.push(`${f.rt.length} von ${RAUMTYPEN.length} Raumtypen`);
   const today = new Date().toLocaleDateString("de-DE");
-  let html = `<div class="pr-title">Bemusterungsliste</div><div class="pr-sub">${escHtml((PROJEKT.projektnummer ? PROJEKT.projektnummer + " · " : "") + PROJEKT.name)} · Stand ${today}<br>${escHtml(bits.join(" · "))}</div>`;
+  let html = `<div class="pr-head"><div class="pr-headtext"><div class="pr-title">Bemusterungsliste</div><div class="pr-sub">${escHtml((PROJEKT.projektnummer ? PROJEKT.projektnummer + " · " : "") + PROJEKT.name)} · Stand ${today}<br>${escHtml(bits.join(" · "))}</div></div><img class="pr-logo" src="innotech-logo.png" alt="INNOTECH"></div>`;
   secs.forEach(sec => {
     html += `<div class="pr-sec"><h2>${escHtml(sec.titel)}${sec.sub ? `<small>${escHtml(sec.sub)}</small>` : ""}</h2><table class="pr-tbl"><thead><tr>${f.img ? "<th style='width:78pt'>Bild</th>" : ""}<th>Element</th><th>Hersteller / Fabrikat / Art.-Nr.</th><th>Status</th>${f.notiz ? "<th>Bemerkung</th>" : ""}</tr></thead><tbody>`;
     sec.elemente.forEach(e => {
